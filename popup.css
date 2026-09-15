@@ -1,0 +1,16 @@
+:root { color: #1f2937; font-family: Arial, sans-serif; }
+body { margin: 0; min-width: 300px; }
+main { padding: 16px; }
+h1 { margin: 0; font-size: 18px; }
+.hint, .empty-state, .message { color: #6b7280; font-size: 13px; line-height: 1.4; }
+.message { min-height: 18px; margin: 8px 0; }
+form { display: flex; gap: 8px; }
+input { box-sizing: border-box; width: 100%; min-width: 0; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; }
+button { padding: 7px 10px; border: 0; border-radius: 4px; background: #0d6efd; color: #fff; cursor: pointer; }
+button:hover { background: #0b5ed7; }
+ul { margin: 0; padding: 0; list-style: none; }
+li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; border-top: 1px solid #e5e7eb; font-size: 13px; }
+li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+li button { flex: none; padding: 4px 7px; background: #e5e7eb; color: #374151; }
+li button:hover { background: #d1d5db; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
