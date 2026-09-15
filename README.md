@@ -26,12 +26,34 @@ The extension processes company names from visible Internshala listing cards loc
 
 Read the full [privacy policy](https://mdanas-exe.github.io/internshala-company-blocker/privacy-policy.html).
 
-## Install from source
+## Install locally in Chrome
 
-1. Open `chrome://extensions` in Chrome.
-2. Enable **Developer mode**.
-3. Select **Load unpacked**.
-4. Choose this project folder.
+The extension is installed locally from this repository. It is not required to be on the Chrome Web Store.
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/MDAnas-exe/internshala-company-blocker.git
+   ```
+
+2. Open Chrome and go to `chrome://extensions`.
+3. Turn on **Developer mode** in the top-right corner.
+4. Click **Load unpacked**.
+5. Select the cloned `internshala-company-blocker` folder—the folder that contains `manifest.json`.
+6. Confirm that **Internshala Company Blocker** appears in your extensions list.
+7. Open an Internshala job or internship search page and refresh it once.
+8. Confirm that **Block company** appears in the bottom-right corner of listing cards.
+
+### After making changes
+
+To download the latest version after it is updated on GitHub:
+
+```bash
+cd internshala-company-blocker
+git pull origin main
+```
+
+Then return to `chrome://extensions`, click the refresh icon on the Internshala Company Blocker card, and refresh the Internshala page.
 
 ## Compatibility
 
