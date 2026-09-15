@@ -24,7 +24,7 @@ Removing a company makes its listings visible again immediately.
 
 The extension processes company names from visible Internshala listing cards locally in your browser to hide matching cards. It stores only your blocked-company list in Chrome local storage and does not send listing data or personal information to any server.
 
-Read the full [privacy policy](privacy-policy.html).
+Read the full [privacy policy](https://mdanas-exe.github.io/internshala-company-blocker/privacy-policy.html).
 
 ## Install from source
 
