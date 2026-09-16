@@ -8,6 +8,8 @@
   const FLOAT_BUTTON_CLASS = "icb-float-button";
   const PANEL_CLASS = "icb-panel";
   const STYLE_ID = "icb-extension-style";
+  const EASY_APPLY_MODAL_SELECTOR = ".modal-content.easy-apply";
+  const EASY_APPLY_SKIP_SELECTOR = "#easy_apply_skip.skip_button, .easy_apply_skip.skip_button";
   const INSTANCE_ID = crypto.randomUUID();
   const cardSelectors = [
     "#internship_list_container .individual_internship",
@@ -27,6 +29,7 @@
 
   let blockedCompanies = [];
   let queued = false;
+  let skippedEasyApplyRecommendation = null;
 
   function removePreviousExtensionUi() {
     document.getElementById(STYLE_ID)?.remove();
@@ -72,6 +75,8 @@
   }
 
   function getListingCards() {
+    if (/^\/(?:job|internship)(?:\/|$)/.test(location.pathname)) return [];
+
     const cards = new Set();
     for (const selector of cardSelectors) {
       document.querySelectorAll(selector).forEach((card) => {
@@ -79,6 +84,31 @@
       });
     }
     return [...cards];
+  }
+
+  function skipBlockedEasyApplyRecommendation() {
+    const modal = document.querySelector(EASY_APPLY_MODAL_SELECTOR);
+    if (!modal) {
+      skippedEasyApplyRecommendation = null;
+      return;
+    }
+
+    const card = modal.querySelector(cardSelectors.join(", "));
+    const companyElement = card && getCompanyElement(card);
+    const companyName = companyElement && getCompanyName(companyElement);
+    if (!card || !companyName || !isBlocked(companyName)) {
+      skippedEasyApplyRecommendation = null;
+      return;
+    }
+
+    const recommendationId = card.getAttribute("internshipid") || card.id;
+    if (!recommendationId || skippedEasyApplyRecommendation === recommendationId) return;
+
+    const skipButton = modal.querySelector(EASY_APPLY_SKIP_SELECTOR);
+    if (!skipButton || skipButton.disabled) return;
+
+    skippedEasyApplyRecommendation = recommendationId;
+    skipButton.click();
   }
 
   function addBlockButton(card, companyElement, companyName) {
@@ -114,6 +144,7 @@
       card.classList.toggle(HIDDEN_CLASS, companyIsBlocked);
       if (!companyIsBlocked) addBlockButton(card, companyElement, companyName);
     });
+    skipBlockedEasyApplyRecommendation();
   }
 
   function renderBlockedCompaniesPanel() {
