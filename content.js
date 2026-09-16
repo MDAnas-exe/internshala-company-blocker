@@ -29,7 +29,8 @@
 
   let blockedCompanies = [];
   let queued = false;
-  let skippedEasyApplyRecommendation = null;
+  let easyApplySkipQueued = false;
+  const skippedEasyApplyRecommendations = new Set();
 
   function removePreviousExtensionUi() {
     document.getElementById(STYLE_ID)?.remove();
@@ -89,26 +90,45 @@
   function skipBlockedEasyApplyRecommendation() {
     const modal = document.querySelector(EASY_APPLY_MODAL_SELECTOR);
     if (!modal) {
-      skippedEasyApplyRecommendation = null;
+      easyApplySkipQueued = false;
+      skippedEasyApplyRecommendations.clear();
       return;
     }
 
     const card = modal.querySelector(cardSelectors.join(", "));
     const companyElement = card && getCompanyElement(card);
     const companyName = companyElement && getCompanyName(companyElement);
-    if (!card || !companyName || !isBlocked(companyName)) {
-      skippedEasyApplyRecommendation = null;
-      return;
-    }
+    if (!card || !companyName || !isBlocked(companyName)) return;
 
     const recommendationId = card.getAttribute("internshipid") || card.id;
-    if (!recommendationId || skippedEasyApplyRecommendation === recommendationId) return;
+    if (!recommendationId || easyApplySkipQueued || skippedEasyApplyRecommendations.has(recommendationId)) return;
 
     const skipButton = modal.querySelector(EASY_APPLY_SKIP_SELECTOR);
     if (!skipButton || skipButton.disabled) return;
 
-    skippedEasyApplyRecommendation = recommendationId;
-    skipButton.click();
+    easyApplySkipQueued = true;
+    requestAnimationFrame(() => {
+      easyApplySkipQueued = false;
+
+      const currentModal = document.querySelector(EASY_APPLY_MODAL_SELECTOR);
+      const currentCard = currentModal?.querySelector(cardSelectors.join(", "));
+      const currentCompanyElement = currentCard && getCompanyElement(currentCard);
+      const currentCompanyName = currentCompanyElement && getCompanyName(currentCompanyElement);
+      const currentRecommendationId = currentCard?.getAttribute("internshipid") || currentCard?.id;
+      const currentSkipButton = currentModal?.querySelector(EASY_APPLY_SKIP_SELECTOR);
+
+      if (
+        currentRecommendationId !== recommendationId ||
+        !currentCompanyName ||
+        !isBlocked(currentCompanyName) ||
+        !currentSkipButton ||
+        currentSkipButton.disabled ||
+        skippedEasyApplyRecommendations.has(recommendationId)
+      ) return;
+
+      skippedEasyApplyRecommendations.add(recommendationId);
+      currentSkipButton.click();
+    });
   }
 
   function addBlockButton(card, companyElement, companyName) {
